@@ -65,8 +65,7 @@ public class MenuScreen extends BaseScreen {
         destinyX = screenX;
         destinyY = Gdx.graphics.getHeight() - screenY;
 
-        v.set(destinyX - pos.x, destinyY - pos.y).nor().scl(Math.min(pos.dst(destinyX, destinyY), speedMax));
-
+        v.set(destinyX - pos.x, destinyY - pos.y).nor().scl(speedMax);
         return false;
     }
 
