@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.base.BaseScreen;
-import ru.geekbrains.base.Sprite;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.sprite.Background;
+
 
 
 public class MenuScreen extends BaseScreen {
@@ -17,19 +17,25 @@ public class MenuScreen extends BaseScreen {
     private Texture img;
     private Texture bg;
     private Vector2 pos;
-
+    private Vector2 v;
+    private Vector2 touch;
 
     private Background background;
 
 
+
+
     @Override
+
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         img = new Texture("badlogic.jpg");
+      
         pos = new Vector2();
-
+        v = new Vector2();
+        touch = new Vector2();
     }
 
     @Override
@@ -40,10 +46,14 @@ public class MenuScreen extends BaseScreen {
 
         batch.begin();
         background.draw(batch);
+
         batch.draw(img, pos.x, pos.y, 0.5f, 0.5f);
         batch.end();
 
 
+        if (pos.dst(touch) > 0.005) {
+            pos.add(v);
+        }
     }
 
     @Override
@@ -61,6 +71,8 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
+            this.touch = touch;
+             v.set(touch.sub(pos)).nor().scl(0.002f);
 
        return super.touchDown(touch, pointer, button);
 
