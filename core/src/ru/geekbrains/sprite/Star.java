@@ -28,6 +28,7 @@ private float starAnimateTimer;
     }
 
     @Override
+
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         this.worldBounds = worldBounds;

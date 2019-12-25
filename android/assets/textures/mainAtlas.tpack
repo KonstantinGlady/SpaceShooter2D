@@ -34,8 +34,8 @@ enemy1
 main_ship
   rotate: false
   xy: 916, 95
-  size: 390, 287
-  orig: 390, 287
+  size: 195, 287
+  orig: 195, 287
   offset: 0, 0
   index: -1
 message_game_over
