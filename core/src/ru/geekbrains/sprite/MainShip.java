@@ -15,6 +15,7 @@ public class MainShip extends Sprite {
 
     private static final int INVALID_POINTER = -1;
 
+    private Sound sound;
     private BulletPool bulletPool;
     private TextureRegion bulletRegion;
     private float bulletHeight;
@@ -32,6 +33,9 @@ public class MainShip extends Sprite {
     private int rightPointer = INVALID_POINTER;
 
     private Rect worldBounds;
+    private float startAutoFire;
+    private float startAutoFireTimer;
+    private boolean autoFire;
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
@@ -42,7 +46,9 @@ public class MainShip extends Sprite {
         damage = 1;
         v = new Vector2();
         v0 = new Vector2(0.5f, 0);
-
+        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        startAutoFireTimer = 0.2f;
+        autoFire = false;
     }
 
     @Override
@@ -70,6 +76,14 @@ public class MainShip extends Sprite {
 //        if (getRight() < worldBounds.getLeft()) {
 //            setLeft(worldBounds.getRight());
 //        }
+        if (autoFire) {
+            startAutoFire += delta;
+            if (startAutoFire > startAutoFireTimer) {
+                startAutoFire = 0;
+                shoot();
+            }
+        }
+
     }
 
     @Override
@@ -87,6 +101,12 @@ public class MainShip extends Sprite {
             rightPointer = pointer;
             moveRight();
         }
+
+        return false;
+    }
+
+    public boolean touchDragged(Vector2 touch, int pointer) {
+           autoFire = !autoFire;
         return false;
     }
 
@@ -168,8 +188,11 @@ public class MainShip extends Sprite {
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, damage);
-
+        sound.play(0.02f);
     }
 
+    public void dispose() {
+        sound.dispose();
+    }
 
 }
