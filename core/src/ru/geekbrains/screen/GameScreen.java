@@ -33,6 +33,7 @@ public class GameScreen extends BaseScreen {
     private MainShip mainShip;
 
     private BulletPool bulletPool;
+    private BulletPool bulletPoolEnemy;
     private EnemyPool enemyPool;
 
     private Music music;
@@ -55,7 +56,8 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        enemyPool = new EnemyPool(bulletPool, bulletSound, worldBounds);
+        bulletPoolEnemy = new BulletPool();
+        enemyPool = new EnemyPool(bulletPoolEnemy, bulletSound, worldBounds);
         mainShip = new MainShip(atlas, bulletPool, laserSound);
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
         music.setLooping(true);
@@ -67,6 +69,7 @@ public class GameScreen extends BaseScreen {
         super.render(delta);
         update(delta);
         checkCollisions();
+        checkDamage();
         freeAllDestroyed();
         draw();
     }
@@ -87,6 +90,7 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         bg.dispose();
         bulletPool.dispose();
+        bulletPoolEnemy.dispose();
         enemyPool.dispose();
         music.dispose();
         laserSound.dispose();
@@ -124,6 +128,7 @@ public class GameScreen extends BaseScreen {
         }
         mainShip.update(delta);
         bulletPool.updateActiveSprites(delta);
+        bulletPoolEnemy.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
         enemyGenerator.generate(delta);
     }
@@ -137,11 +142,30 @@ public class GameScreen extends BaseScreen {
         }
     }
 
+    private void checkDamage() {
+        List<EnemyShip> enemyShips = enemyPool.getActiveObjects();
+        List<Bullet> bullets = bulletPool.getActiveObjects();
+        for (Bullet bullet : bullets) {
+            for (EnemyShip ship : enemyShips) {
+                if (!bullet.isOutside(ship)) {
+                    int enemyShipHp = ship.getHp();
+                    int mainShimDamage = mainShip.getDamage();
+                    if (mainShimDamage >= enemyShipHp) {
+                        ship.destroy();
+                    } else {
+                        bullet.destroy();
+                        ship.setHp(mainShimDamage);
+                    }
 
+                }
+            }
+        }
+    }
 
 
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyedActiveObjects();
+        bulletPoolEnemy.freeAllDestroyedActiveObjects();
         enemyPool.freeAllDestroyedActiveObjects();
     }
 
@@ -156,6 +180,7 @@ public class GameScreen extends BaseScreen {
         }
         mainShip.draw(batch);
         bulletPool.drawActiveSprites(batch);
+        bulletPoolEnemy.drawActiveSprites(batch);
         enemyPool.drawActiveSprites(batch);
         batch.end();
     }

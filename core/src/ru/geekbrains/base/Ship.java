@@ -47,5 +47,15 @@ public class Ship extends Sprite {
         shootSound.play();
     }
 
+    public int getHp() {
+        return hp;
+    }
 
+    public void setHp(int damage) {
+        this.hp -=damage;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
 }
