@@ -145,7 +145,6 @@ public class GameScreen extends BaseScreen {
     private void checkDamage() {
         List<EnemyShip> enemyShips = enemyPool.getActiveObjects();
         List<Bullet> bullets = bulletPool.getActiveObjects();
-        
         for (Bullet bullet : bullets) {
             for (EnemyShip ship : enemyShips) {
                 if (!bullet.isOutside(ship)) {
