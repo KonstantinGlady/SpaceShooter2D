@@ -15,8 +15,7 @@ public class Sprite extends Rect {
     protected TextureRegion[] regions;
     protected int frame;
 
-    public Sprite(){
-
+    public Sprite() {
     }
 
     public Sprite(TextureRegion region) {

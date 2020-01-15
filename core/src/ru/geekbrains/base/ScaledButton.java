@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class ScaledButton extends Sprite {
 
-    private static final float PRES_SCALE = 0.9f;
+    private static final float PRESS_SCALE = 0.9f;
 
     private boolean pressed = false;
     private int pointer;
@@ -19,9 +19,8 @@ public abstract class ScaledButton extends Sprite {
         if (pressed || !isMe(touch)) {
             return false;
         }
-
         this.pointer = pointer;
-        this.scale = PRES_SCALE;
+        this.scale = PRESS_SCALE;
         this.pressed = true;
         return false;
     }

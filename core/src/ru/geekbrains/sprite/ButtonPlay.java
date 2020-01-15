@@ -2,7 +2,6 @@ package ru.geekbrains.sprite;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ru.geekbrains.base.ScaledButton;
 import ru.geekbrains.math.Rect;
@@ -10,7 +9,7 @@ import ru.geekbrains.screen.GameScreen;
 
 public class ButtonPlay extends ScaledButton {
 
-   private Game game;
+    private Game game;
 
     public ButtonPlay(TextureAtlas atlas, Game game) {
         super(atlas.findRegion("btPlay"));
@@ -21,13 +20,12 @@ public class ButtonPlay extends ScaledButton {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         setHeightProportion(0.19f);
-        setLeft(worldBounds.getLeft()+0.05f);
+        setLeft(worldBounds.getLeft() + 0.05f);
         setBottom(worldBounds.getBottom() + 0.05f);
     }
 
     @Override
     public void action() {
         game.setScreen(new GameScreen());
-
     }
 }

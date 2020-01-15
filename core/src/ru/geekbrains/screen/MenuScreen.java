@@ -15,17 +15,16 @@ import ru.geekbrains.sprite.ButtonExit;
 import ru.geekbrains.sprite.ButtonPlay;
 import ru.geekbrains.sprite.Star;
 
-
 public class MenuScreen extends BaseScreen {
 
     private Game game;
+
     private Texture bg;
     private TextureAtlas atlas;
 
+    private Background background;
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
-
-    private Background background;
     private Star[] stars;
 
     public MenuScreen(Game game) {
@@ -33,37 +32,24 @@ public class MenuScreen extends BaseScreen {
     }
 
     @Override
-
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
-
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
-
         stars = new Star[256];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
-
-
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-       update(delta);
-       draw();
-
-
-    }
-
-    private void update(float delta) {
-        for (Star star: stars) {
-            star.update(delta);
-        }
+        update(delta);
+        draw();
     }
 
     @Override
@@ -77,10 +63,9 @@ public class MenuScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        buttonPlay.resize(worldBounds);
         buttonExit.resize(worldBounds);
-
-        for (Star star: stars) {
+        buttonPlay.resize(worldBounds);
+        for (Star star : stars) {
             star.resize(worldBounds);
         }
     }
@@ -89,8 +74,7 @@ public class MenuScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         buttonExit.touchDown(touch, pointer, button);
         buttonPlay.touchDown(touch, pointer, button);
-       return false;
-
+        return false;
     }
 
     @Override
@@ -100,25 +84,23 @@ public class MenuScreen extends BaseScreen {
         return false;
     }
 
-    public void draw(){
+    private void update(float delta) {
+        for (Star star : stars) {
+            star.update(delta);
+        }
+    }
 
+    private void draw() {
         Gdx.gl.glClearColor(0.2f, 	0.6f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
         background.draw(batch);
-
-        for (Star star: stars ) {
+        for (Star star : stars) {
             star.draw(batch);
         }
-        buttonPlay.draw(batch);
         buttonExit.draw(batch);
-
+        buttonPlay.draw(batch);
         batch.end();
-
     }
-
-
 }
-
-
