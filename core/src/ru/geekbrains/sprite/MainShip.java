@@ -13,7 +13,6 @@ import ru.geekbrains.pool.ExplosionPool;
 public class MainShip extends Ship {
 
     private static final int INVALID_POINTER = -1;
-    private static final int HP = 10;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -34,7 +33,7 @@ public class MainShip extends Ship {
         this.v0 = new Vector2(0.5f, 0);
         this.reloadInterval = 0.25f;
         this.reloadTimer = 0f;
-        this.hp = HP;
+        this.hp = 10;
     }
 
     @Override
@@ -160,11 +159,6 @@ public class MainShip extends Ship {
 
     private void stop() {
         v.setZero();
-    }
-
-    public void newShip(){
-        destroy(false);
-        this.hp = HP;
     }
 
 }
