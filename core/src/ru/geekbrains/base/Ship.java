@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
+import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Bullet;
+import ru.geekbrains.sprite.Explosion;
 
 public class Ship extends Sprite {
 
@@ -14,6 +16,7 @@ public class Ship extends Sprite {
     protected Vector2 v0;
 
     protected BulletPool bulletPool;
+    protected ExplosionPool explosionPool;
     protected TextureRegion bulletRegion;
     protected float bulletHeight;
     protected Vector2 bulletV;
@@ -25,6 +28,9 @@ public class Ship extends Sprite {
 
     protected float reloadInterval;
     protected float reloadTimer;
+
+    protected float damageAnimateInterval = 0.1f;
+    protected float damageAnimateTimer = damageAnimateInterval;
 
     protected int hp;
 
@@ -39,6 +45,30 @@ public class Ship extends Sprite {
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= damageAnimateInterval) {
+            frame = 0;
+        }
+    }
+
+    public void damage(int damage) {
+        hp -= damage;
+        if (hp <= 0) {
+            destroy();
+            hp = 0;
+        }
+        frame = 1;
+        damageAnimateTimer = 0f;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        boom();
     }
 
     protected void shoot() {
@@ -47,15 +77,8 @@ public class Ship extends Sprite {
         shootSound.play();
     }
 
-    public int getHp() {
-        return hp;
-    }
-
-    public void setHp(int damage) {
-        this.hp -=damage;
-    }
-
-    public int getDamage() {
-        return damage;
+    protected void boom() {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(getHeight(), this.pos);
     }
 }
