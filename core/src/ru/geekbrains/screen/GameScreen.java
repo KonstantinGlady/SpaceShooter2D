@@ -1,5 +1,6 @@
 package ru.geekbrains.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -18,14 +19,21 @@ import ru.geekbrains.pool.EnemyPool;
 import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Bullet;
+import ru.geekbrains.sprite.ButtonNewGame;
 import ru.geekbrains.sprite.EnemyShip;
+import ru.geekbrains.sprite.GameOver;
 import ru.geekbrains.sprite.MainShip;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemyGenerator;
 
 public class GameScreen extends BaseScreen {
+    Game game;
 
-    private enum State {PAYING, GAME_OVER}
+    public GameScreen(Game game) {
+        this.game = game;
+    }
+
+    private enum State {PLAYING, GAME_OVER}
 
     private Texture bg;
     private TextureAtlas atlas;
@@ -43,6 +51,8 @@ public class GameScreen extends BaseScreen {
     private Sound laserSound;
     private Sound bulletSound;
     private Sound explosionSound;
+    private ButtonNewGame buttonNewGame;
+    private GameOver gameOver;
 
     private EnemyGenerator enemyGenerator;
 
@@ -67,9 +77,11 @@ public class GameScreen extends BaseScreen {
         enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds);
         mainShip = new MainShip(atlas, bulletPool, explosionPool, laserSound);
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
+        buttonNewGame = new ButtonNewGame(atlas, game, this);
+        gameOver = new GameOver(atlas);
         music.setLooping(true);
         music.play();
-        state = State.PAYING;
+        state = State.PLAYING;
     }
 
     @Override
@@ -89,6 +101,9 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
+        buttonNewGame.resize(worldBounds);
+        gameOver.resize(worldBounds);
+
     }
 
     @Override
@@ -107,23 +122,27 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        if (state == State.PAYING) {
+        if (state == State.PLAYING) {
             mainShip.touchDown(touch, pointer, button);
+        } else if (state == State.GAME_OVER) {
+            buttonNewGame.touchDown(touch, pointer, button);
         }
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        if (state == State.PAYING) {
+        if (state == State.PLAYING) {
             mainShip.touchUp(touch, pointer, button);
+        } else if (state == State.GAME_OVER) {
+            buttonNewGame.touchUp(touch, pointer, button);
         }
         return false;
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        if (state == State.PAYING) {
+        if (state == State.PLAYING) {
             mainShip.keyDown(keycode);
         }
         return false;
@@ -131,7 +150,7 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean keyUp(int keycode) {
-        if (state == State.PAYING) {
+        if (state == State.PLAYING) {
             mainShip.keyUp(keycode);
         }
         return false;
@@ -142,7 +161,7 @@ public class GameScreen extends BaseScreen {
             star.update(delta);
         }
         explosionPool.updateActiveSprites(delta);
-        if (state == State.PAYING) {
+        if (state == State.PLAYING) {
             mainShip.update(delta);
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
@@ -151,7 +170,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private void checkCollisions() {
-        if (state != State.PAYING) {
+        if (state != State.PLAYING) {
             return;
         }
         List<EnemyShip> enemyShipList = enemyPool.getActiveObjects();
@@ -193,7 +212,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private void draw() {
-        Gdx.gl.glClearColor(0.2f, 	0.6f, 0.5f, 1);
+        Gdx.gl.glClearColor(0.2f, 0.6f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
@@ -202,11 +221,21 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
-        if (state == State.PAYING) {
+        if (state == State.PLAYING) {
             mainShip.draw(batch);
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
+        } else if (state == State.GAME_OVER) {
+            gameOver.draw(batch);
+            buttonNewGame.draw(batch);
         }
         batch.end();
+    }
+
+    public void newGame() {
+        enemyPool.dispose();
+        bulletPool.dispose();
+        mainShip.newShip();
+        state = State.PLAYING;
     }
 }
