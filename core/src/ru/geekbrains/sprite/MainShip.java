@@ -163,7 +163,7 @@ public class MainShip extends Ship {
     }
 
     public void newShip(){
-        destroy(false);
+        flushDestroy();
         this.hp = HP;
     }
 
