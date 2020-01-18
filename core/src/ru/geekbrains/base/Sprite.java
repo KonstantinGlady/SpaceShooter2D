@@ -90,7 +90,7 @@ public class Sprite extends Rect {
     public void destroy() {
         this.destroyed = true;
     }
-
+   
     public void flushDestroy() {
         this.destroyed = false;
     }
