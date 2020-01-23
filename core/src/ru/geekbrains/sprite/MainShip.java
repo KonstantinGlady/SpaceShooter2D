@@ -13,7 +13,7 @@ import ru.geekbrains.pool.ExplosionPool;
 public class MainShip extends Ship {
 
     private static final int INVALID_POINTER = -1;
-    private static final int HP = 10;
+    private static final int HP = 100;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -162,9 +162,18 @@ public class MainShip extends Ship {
         v.setZero();
     }
 
-    public void newShip(){
-        flushDestroy();
+    public void newShip() {
         this.hp = HP;
+        this.pressedLeft = false;
+        this.pressedLeft = false;
+        this.leftPointer = INVALID_POINTER;
+        this.rightPointer = INVALID_POINTER;
+        stop();
+        this.pos.x = worldBounds.pos.x;
+        flushDestroy();
     }
 
+    public  int getHP() {
+        return hp;
+    }
 }
