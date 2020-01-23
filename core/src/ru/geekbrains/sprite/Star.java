@@ -9,13 +9,13 @@ import ru.geekbrains.math.Rnd;
 
 public class Star extends Sprite {
 
-    private Vector2 v;
-    private Rect worldBounds;
+    protected Vector2 v;
+    protected Rect worldBounds;
 
-    private float height;
+    protected float height;
 
-    private float starAnimateInterval;
-    private float starAnimateTimer;
+    protected float starAnimateInterval;
+    protected float starAnimateTimer;
 
     public Star(TextureAtlas atlas) {
         super(atlas.findRegion("star"));
@@ -50,7 +50,7 @@ public class Star extends Sprite {
         }
     }
 
-    private void checkBounds() {
+    protected void checkBounds() {
         if (getRight() < worldBounds.getLeft()) setLeft(worldBounds.getRight());
         if (getLeft() > worldBounds.getRight()) setRight(worldBounds.getLeft());
         if (getTop() < worldBounds.getBottom()) setBottom(worldBounds.getTop());
